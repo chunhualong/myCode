@@ -6,6 +6,9 @@
       <div class="userinfo-nickname">
         <card :text="userInfo.nickName"></card>
       </div>
+      <div>
+        <a href="/pages/weRun/main">去往我的运动足迹</a>
+      </div>
     </div>
 
     <div class="usermotto">
@@ -14,11 +17,11 @@
       </div>
     </div>
 
-    <form class="form-container">
+    <!--<form class="form-container">
       <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
       <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
+    </form>-->
+    <a href="/pages/counter/main" class="counter">去往Vuex1示例页面</a>
   </div>
 </template>
 
@@ -42,15 +45,30 @@ export default {
       const url = '../logs/main'
       wx.navigateTo({ url })
     },
-    getUserInfo () {
+    login () {
+    },
+    getUserInfo (is) {
       // 调用登录接口
       wx.login({
-        success: () => {
+        success: (res) => {
           wx.getUserInfo({
             success: (res) => {
+              console.log(res)
               this.userInfo = res.userInfo
             }
           })
+          if (is) {
+            wx.request({
+              url: 'http://127.0.0.1:8081/login',
+              method: 'POST',
+              data: {
+                code: res.code
+              },
+              success (res) {
+                console.log(res)
+              }
+            })
+          }
         }
       })
     },
@@ -61,7 +79,16 @@ export default {
 
   created () {
     // 调用应用实例的方法获取全局数据
-    this.getUserInfo()
+    // 检测是否失效
+    wx.checkSession({
+      success: () => {
+        console.log('mei')
+        this.getUserInfo(false)
+      },
+      fail () {
+        this.getUserInfo(true)
+      }
+    })
   }
 }
 </script>
