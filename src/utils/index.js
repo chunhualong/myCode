@@ -18,7 +18,26 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+/**
+ * 封装微信请求方便本地开发
+ * @param url
+ * @param method
+ * @param data
+ * @param callback
+ */
+export function http (url, method, data, callback) {
+  wx.request({
+    url: `http://127.0.0.1:8081${url}`,
+    method: method,
+    data: data,
+    success: (res) => {
+      callback && callback(res)
+    }
+  })
+}
+
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  http
 }

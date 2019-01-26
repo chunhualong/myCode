@@ -1,7 +1,9 @@
 <template>
+  <div class="content">
     <div v-for="item in runList">
       运动时间:{{item.timestamp}} 运动步数：{{item.step}}
     </div>
+  </div>
 </template>
 
 <script>
@@ -13,22 +15,29 @@
     },
     methods: {
       getRun () {
+        let that = this
         wx.getWeRunData({
           success (res) {
-            console.log(res.encryptedData)
+            let userId
+            let thatRes = res
             /* 调用解密data */
-            wx.request({
-              url: 'http://127.0.0.1:8081/completeInfo',
-              method: 'POST',
-              data: {
-                iv: res.iv,
-                encryptedData: res.encryptedData
-              },
-              success (res) {
-                console.log(this.runList)
-                this.runList = res.data.list
+            wx.getStorage({
+              key: 'id',
+              success: (res) => {
+                userId = res.data
+                console.log(userId)
+                that.$http('/completeInfo', 'POST', {
+                  iv: thatRes.iv,
+                  encryptedData: thatRes.encryptedData,
+                  id: userId
+                }, (res) => {
+                  that.runList = res.data.list
+                })
               }
             })
+          },
+          fail (error) {
+            console.log(error)
           }
         })
       }
@@ -40,5 +49,10 @@
 </script>
 
 <style scoped>
-
+  .content{
+    box-sizing: border-box;
+    height: 100%;
+    padding: 50rpx 0;
+    overflow: auto;
+  }
 </style>
