@@ -12,9 +12,13 @@ export default {
 </script>
 
 <style>
+  view.userImg{
+    width: 220rpx;
+    height: 220rpx;
+    border-radius: 100%;
+  }
 .container {
   height: 100%;
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;

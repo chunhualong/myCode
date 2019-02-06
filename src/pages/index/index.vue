@@ -1,14 +1,17 @@
+<script src="../../utils/index.js"></script>
 <template>
   <div class="container">
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-      <div>
-        <a href="/pages/weRun/main">去往我的运动足迹</a>
-      </div>
+    <div style="display: flex;align-content: center;justify-content: center">
+      <i-avatar i-class="userImg" size="large" :src="userInfo.avatarUrl" shape="square"></i-avatar>
     </div>
+    <div style="text-align: center;color: #999;font-size: 14px;padding: 20rpx">
+      <open-data type="userNickName"></open-data>
+    </div>
+    <i-cell-group>
+      <i-cell title="我的运动足迹" url="/pages/weRun/main" is-link></i-cell>
+      <i-cell title="查看我的位置" url="/pages/map/main" is-link></i-cell>
+    </i-cell-group>
+    <i-button open-type="getUserInfo">获取我的信息</i-button>
   </div>
 </template>
 
@@ -36,12 +39,14 @@ export default {
       // 调用登录接口
       wx.login({
         success: (res) => {
-          console.log(res)
+          // 小程序用户信息
           wx.getUserInfo({
             success: (res) => {
+              console.log(res.userInfo.avatarUrl)
               this.userInfo = res.userInfo
             }
           })
+          // 自定义用户信息
           this.$http('/login', 'POST', {
             code: res.code,
             sava: is
@@ -62,11 +67,9 @@ export default {
     // 检测是否失效
     wx.checkSession({
       success: () => {
-        console.log('mei')
         that.getUser(false)
       },
       fail () {
-        console.log(this)
         that.getUser(true)
       }
     })

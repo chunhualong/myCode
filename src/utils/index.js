@@ -27,7 +27,7 @@ export function formatTime (date) {
  */
 export function http (url, method, data, callback) {
   wx.request({
-    url: `http://127.0.0.1:8081${url}`,
+    url: `https://www.feilong.fun${url}`,
     method: method,
     data: data,
     success: (res) => {
