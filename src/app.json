@@ -4,7 +4,8 @@
     "pages/logs/main",
     "pages/counter/main",
     "pages/weRun/main",
-    "pages/map/main"
+    "pages/map/main",
+    "pages/answer/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
